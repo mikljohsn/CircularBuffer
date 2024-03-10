@@ -7,38 +7,45 @@ class CircularBuffer {
     this.writeIndex = 0;
     this.readIndex = 0;
   }
+
   add(value) {
+    if (this.isFull()) {
+      throw new Error("Buffer is full");
+    }
     this.buffer[this.writeIndex] = value;
     this.writeIndex = (this.writeIndex + 1) % this.size;
   }
 
-    get() {
-        const value = this.buffer[this.readIndex];
-        this.readIndex = (this.readIndex + 1) % this.size;
-        return value;
+  get() {
+    if (this.isEmpty()) {
+      return null;
     }
+    const value = this.buffer[this.readIndex];
+    this.buffer[this.readIndex] = null;
+    this.readIndex = (this.readIndex + 1) % this.size;
+    return value;
+  }
 
-    remove(writeIndex) {
-        this.buffer[writeIndex] = null;
+  peek() {
+    if (this.isEmpty()) {
+      return null;
     }
-  
-    peek() {
-        return this.buffer[this.readIndex];
-    }
+    return this.buffer[this.readIndex];
+  }
 
-    isEmpty() {
-        return this.readIndex === this.writeIndex;
-    }
+  isEmpty() {
+    return this.readIndex === this.writeIndex;
+  }
 
-    isFull() {
-        return (this.writeIndex + 1) % this.size === this.readIndex;
-    }
+  isFull() {
+    return (this.writeIndex + 1) % this.size === this.readIndex;
+  }
 
-    size() {
-        return this.size;
-    }
+  getSize() {
+    return this.size;
+  }
 
-    capacity() {
-        return this.size - 1;
-    }
+  capacity() {
+    return this.size . 1;
+  }
 }
